@@ -152,7 +152,15 @@ Always and forever yours.`;
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ currentState: capsuleState })
       });
-      const data = await res.json();
+      const textVal = await res.text();
+      let data: any = {};
+      if (textVal && textVal.trim() !== "undefined") {
+        try {
+          data = JSON.parse(textVal);
+        } catch (e) {
+          console.warn("Could not parse capsule JSON on client:", e);
+        }
+      }
       if (res.ok && data.message) {
         setCapsuleMessage(data.message);
         setCapsuleOpen(true);
@@ -273,15 +281,23 @@ Always and forever yours.`;
         }),
       });
 
-      const data = await response.json();
-      if (response.ok) {
+      const textVal = await response.text();
+      let data: any = {};
+      if (textVal && textVal.trim() !== "undefined") {
+        try {
+          data = JSON.parse(textVal);
+        } catch (e) {
+          console.warn("Could not parse chat JSON on client:", e);
+        }
+      }
+      if (response.ok && data.reply) {
         setChatMessages(prev => [...prev, {
           id: (Date.now() + 1).toString(),
           sender: "boy",
           text: data.reply,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }]);
-        setExpression(data.expression);
+        setExpression(data.expression || "POUTING");
         
         if (data.expression === "LOVE") {
           triggerEmojiConfetti("💖");
@@ -289,7 +305,7 @@ Always and forever yours.`;
           triggerEmojiConfetti("😳");
         }
       } else {
-        throw new Error(data.error);
+        throw new Error(data.error || "No response received");
       }
     } catch (err) {
       console.error(err);
