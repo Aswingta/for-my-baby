@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Outfit:wght@100..900&family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-romantic: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-natural-bg: #1a0b0b;
+  --color-natural-text: #f5f5f0;
+  --color-natural-accent: #ff8a8a;
+  --color-natural-card: rgba(26, 11, 11, 0.45);
+}
+
+/* Custom animated soft pulse gradient backdrops */
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+@keyframes slowDrift {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(15deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.animate-heart-pulse {
+  animation: heartPulse 3s infinite ease-in-out;
+}
+
+@keyframes floatAway {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(0) rotate(270deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-away {
+  animation: floatAway 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 12s linear infinite;
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(26, 11, 11, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 138, 138, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 138, 138, 0.6);
+}

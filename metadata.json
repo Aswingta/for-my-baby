@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Cute Boy 3D Romantic Apology Website",
+  "description": "An interactive, warm, and intimate 3D-feeling space where a cute cartoon boy apologizes to his girlfriend with deep touching messages, procedural soft music, and personalized Gemini-powered apologies.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
