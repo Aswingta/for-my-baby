@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
 
@@ -86,8 +85,8 @@ function cleanJsonText(text: string): string {
 }
 
 // REST Api: Generate personalized apology card/letters
-app.post("/api/apology/generate", async (req, res) => {
-  const { situation, boyName, girlName, style } = req.body;
+app.post(["/api/apology/generate", "/apology/generate"], async (req, res) => {
+  const { situation, boyName, girlName, style } = req.body || {};
   try {
     const ai = getGeminiClient();
 
@@ -188,8 +187,8 @@ app.post("/api/apology/generate", async (req, res) => {
 });
 
 // REST Api: Realtime dialogue conversation with the 3D Boy
-app.post("/api/chat", async (req, res) => {
-  const { history, message, girlName, situation } = req.body;
+app.post(["/api/chat", "/chat"], async (req, res) => {
+  const { history, message, girlName, situation } = req.body || {};
   try {
     const ai = getGeminiClient();
 
@@ -293,8 +292,8 @@ app.post("/api/chat", async (req, res) => {
 });
 
 // REST Api: Reassurance Capsule Jar
-app.post("/api/capsule/open", async (req, res) => {
-  const { currentState } = req.body; // e.g. "lonely" | "anxious" | "tired" | "sad"
+app.post(["/api/capsule/open", "/capsule/open"], async (req, res) => {
+  const { currentState } = req.body || {}; // e.g. "lonely" | "anxious" | "tired" | "sad"
   try {
     const ai = getGeminiClient();
     const systemInstruction = `You are a sweet, incredibly loving, and ultra-gentle companion. You are writing a short "Reassurance Capsule" message (1-3 sentences).
@@ -371,6 +370,7 @@ app.post("/api/capsule/open", async (req, res) => {
 // Express Vite mounting
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
