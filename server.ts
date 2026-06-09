@@ -249,37 +249,101 @@ app.post(["/api/chat", "/chat"], async (req, res) => {
   } catch (error: any) {
     console.log("[Info - Dialogue Chat API Fallback Triggered]:", error.message || error);
     
-    const msgLower = (message || "").toLowerCase();
+    const msgLower = (message || "").toLowerCase().trim();
     let reply = "I am so sorry, my sweetest princess... I want to understand your heart completely. Please keep talking to me? 🥺";
     let expression = "POUTING";
     let vibeReaction = "looking at you with teary puppy eyes";
 
-    if (msgLower.includes("forgive") || msgLower.includes("forgave") || msgLower.includes("forgiven") || msgLower.includes("okay") || msgLower.includes("yes") || msgLower.includes("hug") || msgLower.includes("love") || msgLower.includes("kiss") || msgLower.includes("❤️")) {
-      reply = "Oh my goodness... you seriously forgave me?! *Holds your hands and blushes so warmly* You have no idea how happy you just made me! I promise to love, cherish, and protect your beautiful heart forever! ❤️";
+    // 1. Greetings
+    if (/\b(hi|hello|hey|hewwo|yo|greetings|good morning|good evening|good afternoon|h-hey)\b/i.test(msgLower)) {
+      const options = [
+        "H-hey my precious... Seeing your message makes my heart skip a beat. I'm so happy you're talking to me. 🥺 How has your day been?",
+        "Hey my sweet princess! I was looking down at my feet remorsefully, but hearing from you is the best feeling ever. ❤️",
+        "Hello, the queen of my life! I've been waiting here, wishing so hard to hear your sweet voice again. Can we talk? 🥺"
+      ];
+      reply = options[Math.floor(Math.random() * options.length)];
+      expression = "POUTING";
+      vibeReaction = "peeking up shyly with hope in his eyes";
+    }
+    // 2. Status queries
+    else if (/\b(how are you|how r u|how r y|are you ok|are you okay|how is it going|how are things|doing ok|doing fine)\b/i.test(msgLower)) {
+      reply = "My heart is a little bit sore because I made you sad, but talking to you right now is healing me completely. How are you doing, my sweet sweetheart? ❤️";
+      expression = "SAD";
+      vibeReaction = "holding his own hands nervously while waiting for your reply";
+    }
+    // 3. Love / Hugs / Kisses / Forgiveness
+    else if (msgLower.includes("forgive") || msgLower.includes("forgave") || msgLower.includes("forgiven") || msgLower.includes("okay") || msgLower.includes("yes") || msgLower.includes("hug") || msgLower.includes("love") || msgLower.includes("kiss") || msgLower.includes("❤️") || msgLower.includes("muah") || msgLower.includes("cuddle")) {
+      const options = [
+        "Oh my goodness... you seriously forgave me?! *Holds your precious hands and blushes so deeply* You make me the happiest boy alive! I promise to cherish you forever! ❤️",
+        "Yeee! *Holds you closer in a warm tight cuddle* I promised to keep you safe and warm in my arms forever. I love you to the stars and back! 😘💖",
+        "Ahhh my heart is racing so fast! Thank you for being so patient and sweet with your silly boyfriend. I love you endlessly! 😳💕"
+      ];
+      reply = options[Math.floor(Math.random() * options.length)];
       expression = "LOVE";
-      vibeReaction = "wipes his face and jumps with joy";
-    } else if (msgLower.includes("upset") || msgLower.includes("angry") || msgLower.includes("mad") || msgLower.includes("hurt") || msgLower.includes("sad") || msgLower.includes("hmph") || msgLower.includes("😤")) {
-      reply = "I understand perfectly why you are still upset with me, my princess. I didn't listen to you enough, and seeing you sad breaks my heart. I will sit right here and listen to you as long as you need... 😭";
+      vibeReaction = "wiping away his final tear and wrapping you in a warm hug";
+    }
+    // 4. Anger / Sadness
+    else if (msgLower.includes("upset") || msgLower.includes("angry") || msgLower.includes("mad") || msgLower.includes("hurt") || msgLower.includes("sad") || msgLower.includes("hmph") || msgLower.includes("😤") || msgLower.includes("stubborn") || msgLower.includes("disappointed")) {
+      const options = [
+        "I understand completely why you are still upset with me, my princess. I didn't listen to your heart enough, and seeing you sad breaks my own heart. I will listen for as long as you need... 😭",
+        "Hmph... I am so sorry for being so careless. I'm sitting in the corner with a cute pout, holding my ears until you feel better. I want to make it up to you. 🥺"
+      ];
+      reply = options[Math.floor(Math.random() * options.length)];
       expression = "CRYING";
-      vibeReaction = "bows head remorsefully but holds onto your sleeve";
-    } else if (msgLower.includes("promise") || msgLower.includes("always") || msgLower.includes("forever") || msgLower.includes("will you")) {
-      reply = "I pledge to you with every single heartbeat that I will keep my promises. You are my absolute world, and I'll never take your warmth for granted again. ✨";
+      vibeReaction = "bows head remorsefully but holding onto your sleeve";
+    }
+    // 5. Promises / Forever / Always
+    else if (msgLower.includes("promise") || msgLower.includes("always") || msgLower.includes("forever") || msgLower.includes("will you")) {
+      reply = "With every single heartbeat, I promise to protect your smile, cherish your sweet voice, and always stay by your side. No silly argument will ever change that! ✨";
       expression = "BLUSHING";
-      vibeReaction = "places his small hand on his chest with total devotion";
-    } else if (msgLower.includes("macaron") || msgLower.includes("cookie") || msgLower.includes("sweet") || msgLower.includes("feed")) {
-      reply = "*Nibbles eagerly* Mmph, it tastes so sweet, but still not as sweet as your beautiful smile! Thank you for feeding me... and thank you for being so patient with me! 🥺❤️";
+      vibeReaction = "placing his small hand on his chest with total devotion";
+    }
+    // 6. Food / Sweets
+    else if (msgLower.includes("macaron") || msgLower.includes("cookie") || msgLower.includes("sweet") || msgLower.includes("feed") || msgLower.includes("chocolate") || msgLower.includes("cocoa") || msgLower.includes("biscuit")) {
+      reply = "*Nibbles eagerly* Nom nom... It tastes so delicious, but still not as sweet as your beautiful, radiant smile! Thank you for feeding me... 🥺❤️";
       expression = "SWEET_SMILE";
       vibeReaction = "munching happily with a big warm blush";
-    } else {
-      // Pick a random loving recovery line
+    }
+    // 7. What are you doing / what's up
+    else if (msgLower.includes("what are you doing") || msgLower.includes("what's up") || msgLower.includes("doing") || msgLower.includes("whatcha")) {
+      reply = "I was just sitting here thinking about you, tracing little glowing hearts in the air, and wishing so hard that I could wrap you in a real, cozy cuddle. What about you, my love? 🧸";
+      expression = "BLUSHING";
+      vibeReaction = "fidgeting with his collar while blushing";
+    }
+    // 8. Compliments
+    else if (msgLower.includes("cute") || msgLower.includes("adorable") || msgLower.includes("handsome") || msgLower.includes("sweet") || msgLower.includes("boyfriend") || msgLower.includes("ily") || msgLower.includes("love you") || msgLower.includes("sweetie")) {
+      reply = "*Blushes deep crimson, covering his cheeks* Oh my... you calling me cute makes my heart race! I want to be the sweetest, most loving boyfriend just for you! 😳💖";
+      expression = "BLUSHING";
+      vibeReaction = "hiding his face behind his hands in total embarrassment";
+    }
+    // 9. Help / Info
+    else if (msgLower.includes("help") || msgLower.includes("about") || msgLower.includes("what is this") || msgLower.includes("who are you")) {
+      reply = "This is my custom starlight apology page for you! I made it because my heart shattered when I saw you sad. I want to comfort you, talk to you, and see your beautiful smile again! 🌸";
+      expression = "SWEET_SMILE";
+      vibeReaction = "presenting his digital world with a shy little bow";
+    }
+    // 10. Questions
+    else if (msgLower.includes("?") || msgLower.includes("why") || msgLower.includes("what") || msgLower.includes("how")) {
+      const options = [
+        "I might be a silly, clumsy boyfriend sometimes, but everything I do is because I am completely, utterly devoted to you. Will you hold my hand? 🥺",
+        "I promise to answer any questions you have and do whatever it takes to heal your sweet heart. Let me cuddle you close? 💕",
+        "That is a very good question, my princess. I am learning to listen to your heart better every single day. 🥺"
+      ];
+      reply = options[Math.floor(Math.random() * options.length)];
+      expression = "POUTING";
+      vibeReaction = "twiddling his thumbs remorsefully";
+    }
+    // 11. General Fillers
+    else {
       const defaults = [
-        "Every single heartbeat since we last spoke has been whispering your name. I am so incredibly sorry, my beautiful sweetheart. 🥺",
+        "Every single second since we last spoke, my thoughts have been flying straight back to you. I'm so sorry, my beautiful sweetheart. 🥺",
+        "Your words are absolute warmth to my cold world. I'm listening to you with my undivided attention, my gorgeous girl. ❤️",
         "My ears are down, my head is lowered... I am waiting to listen to whatever you wish just to see your lovely smile again.",
-        "Your touch and your voice are the only warm things in my entire world. Please let me hold you soon? ❤️",
-        "I was such a silly boy! I promise to give you my undivided attention and wrap you in cute cuddles whenever you are tired. 🧸"
+        "Every moment without your laughter feels cold. Please look at me, let me hold your warm hand and remind you how deeply you are loved. 💕",
+        "I made a silly mistake, but my love for you is the absolute realest thing in my life. Let's wrap ourselves in a warm blanket cocoon and start over? 🧸"
       ];
       reply = defaults[Math.floor(Math.random() * defaults.length)];
-      expression = msgLower.includes("?") ? "POUTING" : "SAD";
+      expression = "SAD";
       vibeReaction = "looking up submissively hoping for a warm smile";
     }
 

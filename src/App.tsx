@@ -253,6 +253,113 @@ Always and forever yours.`;
     triggerEmojiConfetti("🌸");
   };
 
+  const getSmartFallbackReply = (text: string): { reply: string; expression: ExpressionType } => {
+    const msgLower = text.toLowerCase().trim();
+
+    // 1. Greetings
+    if (/\b(hi|hello|hey|hewwo|yo|greetings|good morning|good evening|good afternoon|h-hey)\b/i.test(msgLower)) {
+      const options = [
+        "H-hey my precious... Seeing your message makes my heart skip a beat. I'm so happy you're talking to me. 🥺 How has your day been?",
+        "Hey my sweet princess! I was looking down at my feet remorsefully, but hearing from you is the best feeling ever. ❤️",
+        "Hello, the queen of my life! I've been waiting here, wishing so hard to hear your sweet voice again. Can we talk? 🥺"
+      ];
+      return {
+        reply: options[Math.floor(Math.random() * options.length)],
+        expression: "POUTING"
+      };
+    }
+    // 2. Status queries
+    if (/\b(how are you|how r u|how r y|are you ok|are you okay|how is it going|how are things|doing ok|doing fine)\b/i.test(msgLower)) {
+      return {
+        reply: "My heart is a little bit sore because I made you sad, but talking to you right now is healing me completely. How are you doing, my sweet sweetheart? ❤️",
+        expression: "SAD"
+      };
+    }
+    // 3. Forgiveness & Love & Hugs
+    if (msgLower.includes("forgive") || msgLower.includes("forgave") || msgLower.includes("forgiven") || msgLower.includes("okay") || msgLower.includes("yes") || msgLower.includes("hug") || msgLower.includes("love") || msgLower.includes("kiss") || msgLower.includes("❤️") || msgLower.includes("muah") || msgLower.includes("cuddle")) {
+      const options = [
+        "Oh my goodness... you seriously forgave me?! *Holds your precious hands and blushes so deeply* You make me the happiest boy alive! I promise to cherish you forever! ❤️",
+        "Yeee! *Holds you closer in a warm tight cuddle* I promised to keep you safe and warm in my arms forever. I love you to the stars and back! 😘💖",
+        "Ahhh my heart is racing so fast! Thank you for being so patient and sweet with your silly boyfriend. I love you endlessly! 😳💕"
+      ];
+      return {
+        reply: options[Math.floor(Math.random() * options.length)],
+        expression: "LOVE"
+      };
+    }
+    // 4. Anger / Sadness
+    if (msgLower.includes("upset") || msgLower.includes("angry") || msgLower.includes("mad") || msgLower.includes("hurt") || msgLower.includes("sad") || msgLower.includes("hmph") || msgLower.includes("😤") || msgLower.includes("stubborn") || msgLower.includes("disappointed")) {
+      const options = [
+        "I understand completely why you are still upset with me, my princess. I didn't listen to your heart enough, and seeing you sad breaks my own heart. I will listen for as long as you need... 😭",
+        "Hmph... I am so sorry for being so careless. I'm sitting in the corner with a cute pout, holding my ears until you feel better. I want to make it up to you. 🥺"
+      ];
+      return {
+        reply: options[Math.floor(Math.random() * options.length)],
+        expression: "CRYING"
+      };
+    }
+    // 5. Promises
+    if (msgLower.includes("promise") || msgLower.includes("always") || msgLower.includes("forever") || msgLower.includes("will you")) {
+      return {
+        reply: "With every single heartbeat, I promise to protect your smile, cherish your sweet voice, and always stay by your side. No silly argument will ever change that! ✨",
+        expression: "BLUSHING"
+      };
+    }
+    // 6. Food / Sweets
+    if (msgLower.includes("macaron") || msgLower.includes("cookie") || msgLower.includes("sweet") || msgLower.includes("feed") || msgLower.includes("chocolate") || msgLower.includes("cocoa") || msgLower.includes("biscuit")) {
+      return {
+        reply: "*Nibbles eagerly* Nom nom... It tastes so delicious, but still not as sweet as your beautiful, radiant smile! Thank you for feeding me... 🥺❤️",
+        expression: "SWEET_SMILE"
+      };
+    }
+    // 7. What are you doing / what's up
+    if (msgLower.includes("what are you doing") || msgLower.includes("what's up") || msgLower.includes("doing") || msgLower.includes("whatcha")) {
+      return {
+        reply: "I was just sitting here thinking about you, tracing little glowing hearts in the air, and wishing so hard that I could wrap you in a real, cozy cuddle. What about you, my love? 🧸",
+        expression: "BLUSHING"
+      };
+    }
+    // 8. Compliments
+    if (msgLower.includes("cute") || msgLower.includes("adorable") || msgLower.includes("handsome") || msgLower.includes("sweet") || msgLower.includes("boyfriend") || msgLower.includes("ily") || msgLower.includes("love you") || msgLower.includes("sweetie")) {
+      return {
+        reply: "*Blushes deep crimson, covering his cheeks* Oh my... you calling me cute makes my heart race! I want to be the sweetest, most loving boyfriend just for you! 😳💖",
+        expression: "BLUSHING"
+      };
+    }
+    // 9. Help
+    if (msgLower.includes("help") || msgLower.includes("about") || msgLower.includes("what is this") || msgLower.includes("who are you")) {
+      return {
+        reply: "This is my custom starlight apology page for you! I made it because my heart shattered when I saw you sad. I want to comfort you, talk to you, and see your beautiful smile again! 🌸",
+        expression: "SWEET_SMILE"
+      };
+    }
+    // 10. Questions
+    if (msgLower.includes("?") || msgLower.includes("why") || msgLower.includes("what") || msgLower.includes("how")) {
+      const options = [
+        "I might be a silly, clumsy boyfriend sometimes, but everything I do is because I am completely, utterly devoted to you. Will you hold my hand? 🥺",
+        "I promise to answer any questions you have and do whatever it takes to heal your sweet heart. Let me cuddle you close? 💕",
+        "That is a very good question, my princess. I am learning to listen to your heart better every single day. 🥺"
+      ];
+      return {
+        reply: options[Math.floor(Math.random() * options.length)],
+        expression: "POUTING"
+      };
+    }
+
+    // Default conversational responses
+    const defaults = [
+      "Every single second since we last spoke, my thoughts have been flying straight back to you. I'm so sorry, my beautiful sweetheart. 🥺",
+      "Your words are absolute warmth to my cold world. I'm listening to you with my undivided attention, my gorgeous girl. ❤️",
+      "My ears are down, my head is lowered... I am waiting to listen to whatever you wish just to see your lovely smile again.",
+      "Every moment without your laughter feels cold. Please look at me, let me hold your warm hand and remind you how deeply you are loved. 💕",
+      "I made a silly mistake, but my love for you is the absolute realest thing in my life. Let's wrap ourselves in a warm blanket cocoon and start over? 🧸"
+    ];
+    return {
+      reply: defaults[Math.floor(Math.random() * defaults.length)],
+      expression: "SAD"
+    };
+  };
+
   // Submit direct chat replies to the boyfriend
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -311,20 +418,20 @@ Always and forever yours.`;
       console.error(err);
       // Gentle romantic chat fallback responses in case of rate limit/no key
       setTimeout(() => {
-        const fallbacks = [
-          "I promise, with every beat of my heart, that I will never take your beautiful warmth for granted again. Please let me hold you soon? 🥺",
-          "Your words are everything to me. I'm listening to you with all my love and attention, my princess. ❤️",
-          "My ears are down, my head is lowered... I am so sorry, my sweetheart. Can I cuddle you?",
-          "Every moment without your laughter feels cold. Please look at me, I will make it up to you forever. 💕"
-        ];
-        const randomReply = fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        const fallbackResult = getSmartFallbackReply(userMsg.text);
         setChatMessages(prev => [...prev, {
           id: (Date.now() + 1).toString(),
           sender: "boy",
-          text: randomReply,
+          text: fallbackResult.reply,
           time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         }]);
-        setExpression("BLUSHING");
+        setExpression(fallbackResult.expression);
+        
+        if (fallbackResult.expression === "LOVE") {
+          triggerEmojiConfetti("💖");
+        } else if (fallbackResult.expression === "BLUSHING") {
+          triggerEmojiConfetti("😳");
+        }
       }, 1000);
     } finally {
       setIsBoyTyping(false);
