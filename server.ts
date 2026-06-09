@@ -75,6 +75,16 @@ async function generateContentWithFallback(
   throw lastError || new Error("Failed after model fallback chain.");
 }
 
+// Helper to sanitize Gemini's response formatting (stripping markdown backticks if present)
+function cleanJsonText(text: string): string {
+  let cleaned = text.trim();
+  // If the model wrapped the response in a markdown block, strip it
+  if (cleaned.startsWith("```")) {
+    cleaned = cleaned.replace(/^```(json)?\s*/i, "").replace(/\s*```$/, "");
+  }
+  return cleaned.trim();
+}
+
 // REST Api: Generate personalized apology card/letters
 app.post("/api/apology/generate", async (req, res) => {
   const { situation, boyName, girlName, style } = req.body;
@@ -124,7 +134,15 @@ app.post("/api/apology/generate", async (req, res) => {
       },
     });
 
-    const parsedData = JSON.parse(response.text || "{}");
+    let parsedData: any = {};
+    const textVal = cleanJsonText(response.text || "");
+    if (textVal && textVal !== "undefined" && textVal !== "null") {
+      try {
+        parsedData = JSON.parse(textVal);
+      } catch (innerError) {
+        throw new Error("Invalid compiled JSON from model output");
+      }
+    }
     res.json(parsedData);
   } catch (error: any) {
     console.log("[Info - Apology Generator API Fallback Triggered]:", error.message || error);
@@ -219,7 +237,15 @@ app.post("/api/chat", async (req, res) => {
       },
     });
 
-    const parsedData = JSON.parse(response.text || "{}");
+    let parsedData: any = {};
+    const textVal = cleanJsonText(response.text || "");
+    if (textVal && textVal !== "undefined" && textVal !== "null") {
+      try {
+        parsedData = JSON.parse(textVal);
+      } catch (innerError) {
+        throw new Error("Invalid compiled JSON from model output");
+      }
+    }
     res.json(parsedData);
   } catch (error: any) {
     console.log("[Info - Dialogue Chat API Fallback Triggered]:", error.message || error);
@@ -297,7 +323,15 @@ app.post("/api/capsule/open", async (req, res) => {
       }
     });
     
-    const parsed = JSON.parse(response.text || "{}");
+    let parsed: any = {};
+    const textVal = cleanJsonText(response.text || "");
+    if (textVal && textVal !== "undefined" && textVal !== "null") {
+      try {
+        parsed = JSON.parse(textVal);
+      } catch (innerError) {
+        throw new Error("Invalid compiled JSON from model output");
+      }
+    }
     res.json(parsed);
   } catch (error: any) {
     console.log("[Info - Reassurance Capsule API Fallback Triggered]:", error.message || error);
